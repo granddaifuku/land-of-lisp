@@ -1,6 +1,6 @@
 (defparameter *num-players* 2)
 (defparameter *max-dice* 3)
-(defparameter *board-size* 2)
+(defparameter *board-size* 3)
 (defparameter *board-hexnum* (* *board-size* *board-size*))
 
 (defun board-array (lst)
@@ -166,4 +166,24 @@
 		((zerop (car tree)) (play-vs-computer (handle-human tree)))
 		(t (play-vs-computer (handle-computer tree)))))
 
-(play-vs-computer (game-tree (gen-board) 0 0 t))
+(let ((old-neighbors (symbol-function 'neighbors))
+	  (previous (make-hash-table)))
+  (defun neighbors (pos)
+	(or (gethash pos previous)
+		(setf (gethash pos previous) (funcall (old-neighbors pos))))))
+
+(let ((old-game-tree (symbol-function 'game-tree))
+	  (previous (make-hash-table :test #'equalp)))
+  (defun game-tree (&rest rest)
+	(or (gethash rest previous)
+		(setf (gethash rest previous) (apply old-game-tree rest)))))
+
+(let ((old-rate-position (symbol-function 'rate-position))
+	  (previous (make-hash-table)))
+  (defun rate-position (tree player)
+	(let ((tab (gethash player previous)))
+	  (unless tab
+		(setf tab (setf (gethash player previous) (make-hash-table))))
+	  (or (gethash tree tab)
+		  (setf (gethash tree tab)
+				(funcall old-rate-position tree player))))))
