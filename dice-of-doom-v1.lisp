@@ -189,5 +189,3 @@
 	  (or (gethash tree tab)
 		  (setf (gethash tree tab)
 				(funcall old-rate-position tree player))))))
-
-(play-vs-computer (game-tree (gen-board) 0 0 t))
