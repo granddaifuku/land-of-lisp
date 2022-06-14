@@ -169,5 +169,3 @@
 									 most-positive-fixnum
 									 most-negative-fixnum)))
 	(cadr (lazy-nth (position (apply #'max ratings) ratings) (caddr tree)))))
-
-(play-vs-computer (game-tree (gen-board) 0 0 t))
