@@ -155,5 +155,3 @@
 										  (cadar move)))
 									  (caddr tree))
 									 (lazy-mapcar #'caar (caddr tree)))))))
-
-(serve #'dod-request-handler)
